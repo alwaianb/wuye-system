@@ -17,18 +17,17 @@
         }
         .top-bar strong {font-size:16px;}
 
-        /* 小区大图 全屏自适应 */
+        /* 固定蓝色小区风格背景，绝对不会空白 */
         .top-banner {
             width:100%;
-            height:auto;
-            min-height:240px;
-            max-height:450px;
-            background: url("https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns3fr3dupr3bsr/01.png") center/cover no-repeat;
+            height:320px;
+            background:#2c5282;
+            background:linear-gradient(160deg,#1f4e79,#3182ce);
         }
 
         /* 广告区域 */
         .ad-swiper {
-            width:100%;height:120px;background:#222;
+            width:100%;height:120px;background:#1a365d;
         }
 
         /* 功能按钮区 */
@@ -43,7 +42,7 @@
         }
         .func-btn:hover{background:#163552;transform:translateY(-3px);}
 
-        /* 弹窗通用 */
+        /* 弹窗 */
         .mask{
             position:fixed;inset:0;background:#00000070;display:none;z-index:999;
         }
@@ -70,175 +69,4 @@
         }
         .seal{
             position:absolute;right:20px;bottom:30px;width:120px;height:120px;
-            border:3px solid #c00;border-radius:50%;color:#c00;font-weight:bold;font-size:14px;
-            display:flex;align-items:center;justify-content:center;line-height:1.4;
-            opacity:0.8;transform:rotate(-15deg);
-        }
-
-        .admin-enter{
-            text-align:center;margin:40px 0;
-        }
-        footer{text-align:center;padding:30px;color:#666;font-size:14px;}
-    </style>
-</head>
-<body>
-
-<div class="top-bar">
-    <strong>云浮·罗定</strong>
-    <span>北京时间：<span id="time"></span></span>
-</div>
-
-<!-- 这里就是你的一方御湾小区全景图，自适应铺满整个网页 -->
-<div class="top-banner"></div>
-
-<div class="ad-swiper"></div>
-
-<div class="func-wrap">
-    <button class="func-btn" onclick="openPop('pay')">💰 物业费缴费</button>
-    <button class="func-btn" onclick="openPop('vote')">🎯 业主投票</button>
-    <button class="func-btn" onclick="openPop('reg')">👤 业主登记</button>
-    <button class="func-btn" onclick="openPop('repair')">📋 报修申报</button>
-</div>
-
-<div class="admin-enter">
-    <button class="func-btn" onclick="openPop('admin')">管理员后台登录</button>
-</div>
-
-<footer>一方御湾商住小区 · 物业管理缴费系统</footer>
-
-<div class="mask" onclick="closeAllPop()"></div>
-
-<div class="pop" id="pop-pay">
-    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
-    <h3>物业费缴费</h3>
-    <input type="text" id="house" placeholder="请输入房号（例：1栋201）">
-    <input type="text" id="ownerName" placeholder="业主姓名">
-    <input type="number" id="payMoney" placeholder="缴费金额（元）">
-    <input type="month" id="payMonth">
-    <button class="pop-submit" onclick="submitPay()">确认缴费，生成收据</button>
-</div>
-
-<div class="pop" id="pop-receipt">
-    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
-    <h3 style="text-align:center">物业缴费正式收据</h3>
-    <div class="receipt-box">
-        <p>房号：<span id="r-house"></span></p>
-        <p>业主：<span id="r-name"></span></p>
-        <p>缴费月份：<span id="r-month"></span></p>
-        <p>缴费金额：¥ <span id="r-money"></span></p>
-        <p>缴费时间：<span id="r-time"></span></p>
-        <div class="seal">
-            一方御湾小区<br>
-            物业收款专用章
-        </div>
-    </div>
-    <button class="pop-submit" onclick="closeAllPop()">确认留存</button>
-</div>
-
-<div class="pop" id="pop-vote">
-    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
-    <h3>业主投票</h3>
-    <input placeholder="房号">
-    <input placeholder="姓名">
-    <button class="pop-submit">提交投票</button>
-</div>
-
-<div class="pop" id="pop-reg">
-    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
-    <h3>业主信息登记</h3>
-    <input placeholder="房号">
-    <input placeholder="姓名">
-    <input placeholder="联系电话">
-    <button class="pop-submit">提交登记</button>
-</div>
-
-<div class="pop" id="pop-repair">
-    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
-    <h3>报修申报</h3>
-    <input placeholder="房号">
-    <input placeholder="故障位置/问题描述">
-    <button class="pop-submit">提交报修工单</button>
-</div>
-
-<div class="pop" id="pop-admin">
-    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
-    <h3>管理员专属登录</h3>
-    <input type="text" id="adminUser" placeholder="管理员账号">
-    <input type="password" id="adminPwd" placeholder="管理员密码">
-    <button class="pop-submit" onclick="adminLogin()">登录后台</button>
-    <p style="margin-top:10px;font-size:12px;color:#999;">账号：admin  密码：99886</p>
-</div>
-
-<script>
-    function showTime(){
-        const now = new Date();
-        document.getElementById('time').innerText = now.toLocaleTimeString();
-    }
-    setInterval(showTime,1000);
-    showTime();
-
-    function openPop(type){
-        document.querySelector('.mask').style.display = 'block';
-        const map = {'pay':'pop-pay','vote':'pop-vote','reg':'pop-reg','repair':'pop-repair','admin':'pop-admin'};
-        document.getElementById(map[type]).style.display='block';
-    }
-
-    function closeAllPop(){
-        document.querySelector('.mask').style.display = 'none';
-        document.querySelectorAll('.pop').forEach(i=>i.style.display='none');
-    }
-
-    function submitPay(){
-        const house = document.getElementById('house').value.trim();
-        const name = document.getElementById('ownerName').value.trim();
-        const money = document.getElementById('payMoney').value.trim();
-        const month = document.getElementById('payMonth').value;
-        const time = new Date().toLocaleString();
-
-        if(!house||!name||!money||!month){alert('请填写完整信息');return;}
-
-        document.getElementById('r-house').innerText = house;
-        document.getElementById('r-name').innerText = name;
-        document.getElementById('r-month').innerText = month;
-        document.getElementById('r-money').innerText = money;
-        document.getElementById('r-time').innerText = time;
-
-        document.getElementById('pop-pay').style.display='none';
-        document.getElementById('pop-receipt').style.display='block';
-
-        let data = JSON.parse(localStorage.getItem('物业数据')||'[]');
-        data.push({house,name,money,month,time,type:'物业费缴费'});
-        localStorage.setItem('物业数据',JSON.stringify(data));
-    }
-
-    function adminLogin(){
-        if(document.getElementById('adminUser').value==='admin' && document.getElementById('adminPwd').value==='99886'){
-            alert('登录成功');openAdmin();
-        }else{alert('账号密码错误');}
-    }
-
-    function openAdmin(){
-        closeAllPop();
-        let d = JSON.parse(localStorage.getItem('物业数据')||'[]');
-        let html = `<div style="padding:30px;max-width:1200px;margin:0 auto;">
-        <h2>物业数据管理后台</h2>
-        <button onclick="exportExcel()" style="padding:12px 25px;background:green;color:white;border:none;border-radius:6px;margin:20px 0;">一键导出Excel报表</button>
-        <table border="1" width="100%" style="border-collapse:collapse;text-align:center;">
-        <tr style="background:#1f4e79;color:white;"><th>房号</th><th>业主</th><th>金额</th><th>月份</th><th>时间</th><th>类型</th></tr>`;
-        d.forEach(i=>html += `<tr><td>${i.house}</td><td>${i.name}</td><td>${i.money}</td><td>${i.month}</td><td>${i.time}</td><td>${i.type}</td></tr>`);
-        html += `</table></div>`;
-        document.body.insertAdjacentHTML('beforeend',html);
-    }
-
-    function exportExcel(){
-        let d = JSON.parse(localStorage.getItem('物业数据')||'[]');
-        let csv = "\ufeff房号,姓名,金额,月份,时间,类型\n";
-        d.forEach(i=>csv += `${i.house},${i.name},${i.money},${i.month},${i.time},${i.type}\n`);
-        const blob = new Blob([csv],{type:'text/csv'});
-        const a = document.createElement('a');
-        a.href=URL.createObjectURL(blob);
-        a.download="物业数据报表.csv";a.click();
-    }
-</script>
-</body>
-</html>
+            border:3px solid #c00;border-radius:50%;color:#c00;font-weight:bold
