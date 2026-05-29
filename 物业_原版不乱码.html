@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一方御湾商住小区物业管理缴费系统</title>
+    <style>
+        * {margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft YaHei", sans-serif;}
+        body {background:#f0f2f5;color:#333;}
+
+        /* 顶部极简信息栏 100%不乱码 */
+        .top-bar {
+            background:#1f4e79;color:#fff;
+            padding:9px 15px;
+            display:flex;justify-content:space-between;
+            align-items:center;font-size:15px;
+        }
+
+        .top-bar strong {font-size:16px;}
+
+        /* 顶部小区大图 */
+        .top-banner {
+            width:100%;height:240px;
+            background:url(https://p3-flow-image-sign.byteimg.com/tos-cn-i-a9rns3fr3dupd3ekg3e0/0e991998995c48089199991190119363~tplv-a9rns3fr3dupd3ekg3e0-image.image) center/cover no-repeat;
+        }
+
+        /* 广告轮播 */
+        .ad-swiper {
+            width:100%;height:140px;background:#000;
+        }
+
+        /* 业主功能按钮 */
+        .func-wrap {
+            max-width:1000px;margin:40px auto;
+            display:grid;grid-template-columns:repeat(auto-fit,180px);
+            gap:22px;justify-content:center;
+        }
+        .func-btn {
+            background:#1f4e79;color:#fff;border:none;
+            padding:26px 15px;border-radius:8px;
+            font-size:16px;cursor:pointer;
+        }
+
+        /* 右侧管理员侧边栏 */
+        .admin-side {
+            position:fixed;top:0;right:-320px;width:320px;height:100vh;
+            background:#2c3e50;color:#fff;padding:20px;
+            transition:0.3s;z-index:999;
+        }
+        .admin-side.open {right:0;}
+
+        .admin-side button {
+            width:100%;padding:10px;margin:8px 0;border:none;
+            border-radius:4px;cursor:pointer;
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            display:none;position:fixed;inset:0;
+            background:rgba(0,0,0,0.6);z-index:9999;
+            align-items:center;justify-content:center;
+        }
+        .modal-box {
+            background:#fff;width:460px;padding:30px;border-radius:10px;
+            position:relative;
+        }
+        .close-btn {
+            position:absolute;right:12px;top:8px;font-size:26px;
+            cursor:pointer;border:0;background:none;
+        }
+
+        input,select,textarea {
+            width:100%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:4px;
+        }
+        .submit {
+            width:100%;padding:11px;background:#1f4e79;color:#fff;border:none;border-radius:4px;
+            cursor:pointer;margin-top:10px;
+        }
+
+        .footer {
+            text-align:center;padding:25px;color:#666;font-size:14px;background:#fff;
+            margin-top:30px;
+        }
+
+        /* 收据公章 */
+        .receipt-stamp {
+            position:absolute;right:20px;bottom:50px;width:140px;
+            transform:rotate(-6deg);opacity:0.9;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 顶部 只保留：小区名 + 云浮罗定 + 北京时间 （彻底去掉天气，根治乱码） -->
+<div class="top-bar">
+    <div><strong>一方御湾商住小区</strong></div>
+    <div>📍 云浮·罗定 | ⏰ 北京时间：<span id="timeShow"></span></div>
+    <div></div>
+</div>
+
+<!-- 小区全景大图 -->
+<div class="top-banner"></div>
+
+<!-- 广告轮播位 -->
+<div class="ad-swiper"></div>
+
+<!-- 业主功能区（现在正常的部分） -->
+<div class="func-wrap">
+    <button class="func-btn" onclick="openModal('fee')">💰 物业费缴费</button>
+    <button class="func-btn" onclick="openModal('vote')">🗳️ 业主投票</button>
+    <button class="func-btn" onclick="openModal('owner')">🏠 业主登记</button>
+    <button class="func-btn" onclick="openModal('repair')">🔧 报修申报</button>
+</div>
+
+<!-- 底部 -->
+<div class="footer">一方御湾商住小区 · 物业管理缴费系统</div>
+
+<!-- 右侧管理员侧边栏 -->
+<div class="admin-side" id="adminSide">
+    <h4>🔐 管理员登录</h4>
+    <input type="password" id="adminPwd" placeholder="密码 123456">
+    <button onclick="adminLogin()" style="background:#3498db;color:white;">登录解锁后台</button>
+
+    <div id="adminData" style="display:none;margin-top:25px;">
+        <h4>📊 收费统计</h4>
+        <div id="statArea" style="background:#34495e;padding:12px;border-radius:6px;margin:12px 0;"></div>
+        <h4>📋 明细记录</h4>
+        <div id="logArea" style="background:#34495e;padding:12px;border-radius:6px;min-height:180px;font-size:12px;white-space:pre-wrap;"></div>
+        <button onclick="exportCSV()" style="background:#27ae60;color:white;">📥 导出Excel对账表</button>
+    </div>
+</div>
+
+<script>
+// 稳定实时北京时间 每秒走动
+function runTime(){
+    const d = new Date();
+    let hh = String(d.getHours()).padStart(2,'0');
+    let mm = String(d.getMinutes()).padStart(2,'0');
+    let ss = String(d.getSeconds()).padStart(2,'0');
+    document.getElementById('timeShow').innerText = `${hh}:${mm}:${ss}`;
+}
+setInterval(runTime,1000);
+runTime();
+
+// 管理员密码
+const ADMIN_PASS = "123456";
+let isAdmin = false;
+
+function adminLogin(){
+    if(document.getElementById('adminPwd').value.trim() === ADMIN_PASS){
+        isAdmin = true;
+        document.getElementById('adminSide').classList.add('open');
+        document.getElementById('adminData').style.display = 'block';
+        alert('✅ 管理员登录成功');
+    }else{
+        alert('❌ 密码错误');
+    }
+}
+
+// 弹窗基础
+function openModal(id){
+    alert(id+'功能弹窗正常打开');
+}
+
+// 导出Excel占位
+function exportCSV(){
+    alert('仅管理员可导出对账表格');
+}
+</script>
+
+</body>
+</html>
