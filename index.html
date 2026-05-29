@@ -16,14 +16,21 @@
             align-items:center;font-size:16px;
         }
 
-        /* 一方御湾小区图 直接嵌入代码 永久显示 永不失效 */
+        /* 顶部小区横幅 纯CSS 永不空白 */
         .top-banner {
             width:100%;
             height:340px;
-            background: url("https://p9-flow-image-sign.byteimg.com/tos-cn-i-a9rns3fr3dupr3bsr/ec810800151c4078995119999999999c~tplv-73owjymdk6-image.image") center/cover no-repeat;
+            background: linear-gradient(145deg,#163552,#1f4e79,#3182ce);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#fff;
+            font-size:48px;
+            font-weight:bold;
+            text-shadow:0 0 20px rgba(0,0,0,0.3);
         }
 
-        /* 黑色滚动跑马灯 仅小区+物业电话 */
+        /* 黑色滚动跑马灯 前房子后电话 */
         .ad-banner {
             width:100%;
             height:120px;
@@ -49,7 +56,7 @@
         /* 功能按钮区 */
         .func-wrap{
             max-width:1200px;margin:40px auto;
-            display:grid;grid-template-columns:repeat(4,1fr);gap:25px;padding:0 20px;
+            display:grid;grid-template-columns:repeat(5,1fr);gap:20px;padding:0 20px;
         }
         .func-btn{
             background:#1f4e79;color:#fff;border:none;
@@ -58,9 +65,39 @@
         }
         .func-btn:hover{background:#163552;transform:translateY(-2px);}
 
+        /* 各栋负责人公示栏 */
+        .duty-board{
+            max-width:1200px;margin:0 auto 40px;padding:20px;background:#fff;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1);
+        }
+        .duty-board h3{color:#1f4e79;margin-bottom:15px;text-align:center;font-size:22px;}
+        .duty-list{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;}
+        .duty-item{padding:10px;border:1px solid #ddd;border-radius:5px;text-align:center;}
+
         .admin-enter{text-align:center;margin:30px 0 50px;}
 
         footer{text-align:center;padding:30px;color:#666;font-size:15px;}
+
+        /* 纯CSS绘制真实公章 永不失效 */
+        .seal{
+            position:absolute;right:20px;bottom:30px;width:180px;height:180px;
+            border:4px solid #cc0000;border-radius:50%;
+            color:#cc0000;font-weight:bold;
+            display:flex;align-items:center;justify-content:center;
+            transform:rotate(-12deg);opacity:0.9;
+            position:relative;
+        }
+        .seal::before{
+            content:"★";position:absolute;top:50%;left:50%;
+            transform:translate(-50%,-50%);font-size:60px;
+        }
+        .seal-text{
+            position:absolute;width:100%;height:100%;
+            animation: none;
+        }
+        .seal-text span{
+            position:absolute;left:50%;top:10px;
+            transform-origin:0 80px;font-size:14px;
+        }
     </style>
 </head>
 <body>
@@ -70,22 +107,40 @@
     <span>北京时间：<span id="time"></span></span>
 </div>
 
-<!-- 你的一方御湾小区全景图 永久显示 -->
-<div class="top-banner"></div>
+<!-- 顶部小区横幅 纯CSS 永不空白 -->
+<div class="top-banner">
+    一方御湾商住小区
+</div>
 
-<!-- 滚动通知：小区+物业电话 -->
+<!-- 滚动通知：前🏠后📞 -->
 <div class="ad-banner">
     <div class="scroll-text">
-        🏠 一方御湾小区｜物业服务中心服务热线：0766‑3913001 🏠
+        🏠 一方御湾小区｜📞 物业服务中心：0766-3913001
     </div>
 </div>
 
-<!-- 四大功能按钮 点击全部打开独立新页面 -->
+<!-- 五大功能按钮 -->
 <div class="func-wrap">
     <button class="func-btn" onclick="openPayPage()">💰 物业费缴费</button>
     <button class="func-btn" onclick="openVotePage()">🗳️ 业主投票</button>
     <button class="func-btn" onclick="openRegPage()">👤 业主登记</button>
     <button class="func-btn" onclick="openRepairPage()">🔧 报修申报</button>
+    <button class="func-btn" onclick="openRatePage()">⭐ 物业评分</button>
+</div>
+
+<!-- 各栋负责人公示栏 -->
+<div class="duty-board">
+    <h3>📋 各栋物业负责人公示</h3>
+    <div class="duty-list">
+        <div class="duty-item">1栋 张师傅<br>电话：138XXXX1234</div>
+        <div class="duty-item">2栋 李师傅<br>电话：138XXXX2345</div>
+        <div class="duty-item">3栋 王师傅<br>电话：138XXXX3456</div>
+        <div class="duty-item">4栋 刘师傅<br>电话：138XXXX4567</div>
+        <div class="duty-item">5栋 陈师傅<br>电话：138XXXX5678</div>
+        <div class="duty-item">6栋 杨师傅<br>电话：138XXXX6789</div>
+        <div class="duty-item">7栋 黄师傅<br>电话：138XXXX7890</div>
+        <div class="duty-item">8栋 赵师傅<br>电话：138XXXX8901</div>
+    </div>
 </div>
 
 <div class="admin-enter">
@@ -117,7 +172,11 @@
         input{width:100%;margin:10px 0;padding:12px;border:1px solid #ddd;border-radius:5px;font-size:16px;}
         .btn{width:100%;padding:14px;background:#1f4e79;color:#fff;border:none;border-radius:5px;font-size:18px;cursor:pointer;margin-top:20px;}
         .receipt{border:2px dashed #333;padding:30px;position:relative;margin-top:30px;}
-        .seal{position:absolute;right:20px;bottom:30px;width:120px;height:120px;border:3px solid #c00;border-radius:50%;color:#c00;font-weight:bold;display:flex;align-items:center;justify-content:center;transform:rotate(-15deg);opacity:0.8;}
+        /* 纯CSS公章 */
+        .seal{position:absolute;right:20px;bottom:30px;width:180px;height:180px;border:4px solid #cc0000;border-radius:50%;color:#cc0000;font-weight:bold;transform:rotate(-12deg);opacity:0.9;}
+        .seal::before{content:"★";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:60px;}
+        .seal-text{position:absolute;width:100%;height:100%;}
+        .seal-text span{position:absolute;left:50%;top:10px;transform-origin:0 80px;font-size:14px;}
         </style>
         <h1 style="text-align:center;color:#1f4e79;margin-bottom:30px;">物业费缴费办理</h1>
         <input type="text" id="house" placeholder="房号（例：3栋1502）">
@@ -135,14 +194,14 @@
                 const time = new Date().toLocaleString();
                 if(!house||!name||!money||!month){alert('请填写完整信息');return;}
 
-                // 保存数据
                 window.opener.saveData('缴费',{house,name,money,month,time});
 
-                // 显示收据
+                // 生成带公章的收据
                 document.body.innerHTML = \`
                 <style>body{padding:40px;font-family:"微软雅黑";max-width:600px;margin:0 auto;}
                 .receipt{border:2px dashed #333;padding:30px;position:relative;margin-top:30px;}
-                .seal{position:absolute;right:20px;bottom:30px;width:120px;height:120px;border:3px solid #c00;border-radius:50%;color:#c00;font-weight:bold;display:flex;align-items:center;justify-content:center;transform:rotate(-15deg);opacity:0.8;}
+                .seal{position:absolute;right:20px;bottom:30px;width:180px;height:180px;border:4px solid #cc0000;border-radius:50%;color:#cc0000;font-weight:bold;transform:rotate(-12deg);opacity:0.9;}
+                .seal::before{content:"★";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:60px;}
                 .btn{width:100%;padding:14px;background:#1f4e79;color:#fff;border:none;border-radius:5px;font-size:18px;cursor:pointer;margin-top:20px;}
                 </style>
                 <h1 style="text-align:center;color:#1f4e79;">物业官方缴费收据</h1>
@@ -152,7 +211,28 @@
                     <p style="font-size:18px;margin:12px 0;">缴费月份：\${month}</p>
                     <p style="font-size:18px;margin:12px 0;">缴费金额：¥ \${money}</p>
                     <p style="font-size:18px;margin:12px 0;">缴费时间：\${time}</p>
-                    <div class="seal">一方御湾小区<br>物业收款<br>专用公章</div>
+                    <div class="seal">
+                        <div class="seal-text">
+                            <span style="transform:rotate(-30deg);">罗</span>
+                            <span style="transform:rotate(-15deg);">定</span>
+                            <span style="transform:rotate(0deg);">一</span>
+                            <span style="transform:rotate(15deg);">方</span>
+                            <span style="transform:rotate(30deg);">御</span>
+                            <span style="transform:rotate(45deg);">湾</span>
+                            <span style="transform:rotate(60deg);">商</span>
+                            <span style="transform:rotate(75deg);">住</span>
+                            <span style="transform:rotate(90deg);">小</span>
+                            <span style="transform:rotate(105deg);">区</span>
+                            <span style="transform:rotate(120deg);">第</span>
+                            <span style="transform:rotate(135deg);">一</span>
+                            <span style="transform:rotate(150deg);">届</span>
+                            <span style="transform:rotate(165deg);">业</span>
+                            <span style="transform:rotate(180deg);">主</span>
+                            <span style="transform:rotate(195deg);">委</span>
+                            <span style="transform:rotate(210deg);">员</span>
+                            <span style="transform:rotate(225deg);">会</span>
+                        </div>
+                    </div>
                 </div>
                 <button class="btn" onclick="window.close()">确认留存，关闭页面</button>
                 \`;
@@ -244,6 +324,64 @@
         `);
     }
 
+    // 5. 新增：物业人员评分 独立新页面
+    function openRatePage(){
+        let win = window.open('','_blank');
+        win.document.write(`
+        <style>body{padding:40px;font-family:"微软雅黑";max-width:600px;margin:0 auto;}
+        input,select,textarea{width:100%;margin:10px 0;padding:12px;border:1px solid #ddd;border-radius:5px;font-size:16px;}
+        textarea{height:100px;resize:none;}
+        .btn{width:100%;padding:14px;background:#1f4e79;color:#fff;border:none;border-radius:5px;font-size:18px;cursor:pointer;margin-top:20px;}
+        .stars{display:flex;gap:10px;font-size:30px;cursor:pointer;margin:10px 0;}
+        .star{color:#ccc;}
+        .star.active{color:#ffcc00;}
+        </style>
+        <h1 style="text-align:center;color:#1f4e79;margin-bottom:30px;">物业人员服务评分</h1>
+        <select id="type">
+            <option value="保安">保安</option>
+            <option value="环卫工人">环卫工人</option>
+            <option value="维修师傅">维修师傅</option>
+            <option value="客服">客服</option>
+        </select>
+        <input type="text" id="building" placeholder="所在楼栋（例：3栋）">
+        <input type="text" id="name" placeholder="人员姓名（可选）">
+        <div class="stars">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+        </div>
+        <textarea id="content" placeholder="评价内容（可选）"></textarea>
+        <button class="btn" onclick="submitRate()">提交评分</button>
+
+        <script>
+            // 星级评分交互
+            let rating=0;
+            document.querySelectorAll('.star').forEach(star=>{
+                star.onclick=function(){
+                    rating=this.dataset.value;
+                    document.querySelectorAll('.star').forEach(s=>s.classList.remove('active'));
+                    for(let i=0;i<rating;i++){
+                        document.querySelectorAll('.star')[i].classList.add('active');
+                    }
+                }
+            });
+
+            function submitRate(){
+                const type=document.getElementById('type').value;
+                const building=document.getElementById('building').value;
+                const name=document.getElementById('name').value;
+                const content=document.getElementById('content').value;
+                if(!building||rating===0){alert('请填写楼栋并选择评分');return;}
+                window.opener.saveData('评分',{type,building,name,rating,content});
+                alert('评分提交成功！感谢您的反馈');
+                window.close();
+            }
+        <\/script>
+        `);
+    }
+
     // 管理员登录 独立新页面
     function openAdminLogin(){
         let win = window.open('','_blank');
@@ -263,7 +401,6 @@
                 const u = document.getElementById('user').value;
                 const p = document.getElementById('pwd').value;
                 if(u==='admin'&&p==='99886'){
-                    // 打开真正的管理后台
                     let adminWin = window.open('','_blank');
                     window.close();
 
@@ -280,31 +417,70 @@
                     <h1>📊 一方御湾 · 独立管理后台</h1><hr>
                     \`);
 
-                    // 生成4个独立表格
-                    const types = [
-                        {title:'物业费缴费',type:'缴费'},
-                        {title:'业主投票记录',type:'投票'},
-                        {title:'业主登记信息',type:'登记'},
-                        {title:'报修工单列表',type:'报修'}
-                    ];
-
-                    types.forEach(t=>{
-                        let data = JSON.parse(localStorage.getItem('物业全部数据')||'[]').filter(i=>i.type===t.type);
-                        let html = \`<div class="block"><h2>\${t.title}</h2><button class="btn" onclick="genCSV('\${t.type}','\${t.title}')">一键导出\${t.title}Excel</button><table><tr style="background:#1f4e79;color:#fff;"><th>房号</th><th>业主</th><th>金额</th><th>月份</th><th>提交时间</th></tr>\`;
-                        data.forEach(d=>{
-                            html += \`<tr><td>\${d.house||'-'}</td><td>\${d.name||'-'}</td><td>\${d.money||'-'}</td><td>\${d.month||'-'}</td><td>\${d.time}</td></tr>\`;
-                        });
-                        html += '</table></div>';
-                        adminWin.document.write(html);
+                    // 1. 物业费缴费表
+                    let payData = JSON.parse(localStorage.getItem('物业全部数据')||'[]').filter(i=>i.type==='缴费');
+                    let payHtml = \`<div class="block"><h2>物业费缴费统计表</h2><button class="btn" onclick="genCSV('缴费','物业费缴费')">一键导出Excel</button><table><tr style="background:#1f4e79;color:#fff;"><th>房号</th><th>业主姓名</th><th>缴费金额</th><th>缴费月份</th><th>缴费时间</th></tr>\`;
+                    payData.forEach(d=>{
+                        payHtml += \`<tr><td>\${d.house||'-'}</td><td>\${d.name||'-'}</td><td>¥\${d.money||'-'}</td><td>\${d.month||'-'}</td><td>\${d.time}</td></tr>\`;
                     });
+                    payHtml += '</table></div>';
+                    adminWin.document.write(payHtml);
+
+                    // 2. 业主投票表
+                    let voteData = JSON.parse(localStorage.getItem('物业全部数据')||'[]').filter(i=>i.type==='投票');
+                    let voteHtml = \`<div class="block"><h2>业主投票记录表</h2><button class="btn" onclick="genCSV('投票','业主投票')">一键导出Excel</button><table><tr style="background:#1f4e79;color:#fff;"><th>房号</th><th>业主姓名</th><th>投票选项</th><th>投票时间</th></tr>\`;
+                    voteData.forEach(d=>{
+                        voteHtml += \`<tr><td>\${d.house||'-'}</td><td>\${d.name||'-'}</td><td>\${d.option||'-'}</td><td>\${d.time}</td></tr>\`;
+                    });
+                    voteHtml += '</table></div>';
+                    adminWin.document.write(voteHtml);
+
+                    // 3. 业主登记表
+                    let regData = JSON.parse(localStorage.getItem('物业全部数据')||'[]').filter(i=>i.type==='登记');
+                    let regHtml = \`<div class="block"><h2>业主信息登记表</h2><button class="btn" onclick="genCSV('登记','业主登记')">一键导出Excel</button><table><tr style="background:#1f4e79;color:#fff;"><th>房号</th><th>业主姓名</th><th>联系电话</th><th>登记时间</th></tr>\`;
+                    regData.forEach(d=>{
+                        regHtml += \`<tr><td>\${d.house||'-'}</td><td>\${d.name||'-'}</td><td>\${d.phone||'-'}</td><td>\${d.time}</td></tr>\`;
+                    });
+                    regHtml += '</table></div>';
+                    adminWin.document.write(regHtml);
+
+                    // 4. 报修工单表
+                    let repairData = JSON.parse(localStorage.getItem('物业全部数据')||'[]').filter(i=>i.type==='报修');
+                    let repairHtml = \`<div class="block"><h2>报修工单列表</h2><button class="btn" onclick="genCSV('报修','报修工单')">一键导出Excel</button><table><tr style="background:#1f4e79;color:#fff;"><th>房号</th><th>故障描述</th><th>提交时间</th></tr>\`;
+                    repairData.forEach(d=>{
+                        repairHtml += \`<tr><td>\${d.house||'-'}</td><td>\${d.desc||'-'}</td><td>\${d.time}</td></tr>\`;
+                    });
+                    repairHtml += '</table></div>';
+                    adminWin.document.write(repairHtml);
+
+                    // 5. 新增：物业评分表
+                    let rateData = JSON.parse(localStorage.getItem('物业全部数据')||'[]').filter(i=>i.type==='评分');
+                    let rateHtml = \`<div class="block"><h2>物业人员评分统计表</h2><button class="btn" onclick="genCSV('评分','物业评分')">一键导出Excel</button><table><tr style="background:#1f4e79;color:#fff;"><th>人员类型</th><th>所在楼栋</th><th>姓名</th><th>评分（星）</th><th>评价内容</th><th>提交时间</th></tr>\`;
+                    rateData.forEach(d=>{
+                        rateHtml += \`<tr><td>\${d.type||'-'}</td><td>\${d.building||'-'}</td><td>\${d.name||'-'}</td><td>\${d.rating||'-'}</td><td>\${d.content||'-'}</td><td>\${d.time}</td></tr>\`;
+                    });
+                    rateHtml += '</table></div>';
+                    adminWin.document.write(rateHtml);
 
                     // 导出函数
                     adminWin.document.write(\`
                     <script>
                         function genCSV(type,title){
                             let d = JSON.parse(localStorage.getItem('物业全部数据')||'[]').filter(i=>i.type===type);
-                            let csv='\\ufeff房号,业主,金额,月份,时间,类型\\n';
-                            d.forEach(i=>csv += (i.house||'')+','+(i.name||'')+','+(i.money||'')+','+(i.month||'')+','+i.time+','+i.type+'\\n');
+                            let csv='\\ufeff';
+                            if(type==='缴费') csv+='房号,业主姓名,缴费金额,缴费月份,缴费时间\\n';
+                            else if(type==='投票') csv+='房号,业主姓名,投票选项,投票时间\\n';
+                            else if(type==='登记') csv+='房号,业主姓名,联系电话,登记时间\\n';
+                            else if(type==='报修') csv+='房号,故障描述,提交时间\\n';
+                            else if(type==='评分') csv+='人员类型,所在楼栋,姓名,评分,评价内容,提交时间\\n';
+                            
+                            d.forEach(i=>{
+                                if(type==='缴费') csv += i.house+','+i.name+','+i.money+','+i.month+','+i.time+'\\n';
+                                else if(type==='投票') csv += i.house+','+i.name+','+i.option+','+i.time+'\\n';
+                                else if(type==='登记') csv += i.house+','+i.name+','+i.phone+','+i.time+'\\n';
+                                else if(type==='报修') csv += i.house+','+i.desc+','+i.time+'\\n';
+                                else if(type==='评分') csv += i.type+','+i.building+','+i.name+','+i.rating+','+i.content+','+i.time+'\\n';
+                            });
                             const blob = new Blob([csv],{type:'text/csv'});
                             const a = document.createElement('a');
                             a.href=URL.createObjectURL(blob);
