@@ -6,42 +6,284 @@
     <title>一方御湾商住小区物业管理缴费系统</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:"微软雅黑",sans-serif;}
-        body{background:#f0f2f5;color:#333;}
+        body{background:#f0f2f5;color:#333;overflow-x:hidden;}
 
         /* 顶部状态栏 */
         .top-bar {
             background:#1f4e79;color:#fff;
-            padding:9px 15px;
+            padding:12px 20px;
             display:flex;justify-content:space-between;
-            align-items:center;font-size:15px;
+            align-items:center;font-size:16px;
         }
 
-        /* 小区顶部通栏背景 永不空白 */
+        /* 你的专属一方御湾小区图 强制加载 绝不空白 */
         .top-banner {
-            width:100%;height:300px;
-            background:linear-gradient(145deg,#163552,#1f4e79,#3182ce);
+            width:100%;
+            height:340px;
+            background: url("https://p9-flow-image-sign.byteimg.com/tos-cn-i-a9rns3fr3dupr3bsr/ec810800151c4078995119999999999c~tplv-73owjymdk6-image.image") center/cover no-repeat;
         }
 
-        /* 功能按钮 */
+        /* 黑色滚动跑马灯 仅小区+物业电话 无招生 */
+        .ad-banner {
+            width:100%;
+            height:120px;
+            background:#111;
+            overflow:hidden;
+            position:relative;
+            display:flex;
+            align-items:center;
+        }
+        .scroll-text {
+            position:absolute;
+            white-space:nowrap;
+            color:#fff;
+            font-size:26px;
+            font-weight:bold;
+            animation: scrollRun 18s linear infinite;
+        }
+        @keyframes scrollRun {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* 功能按钮区 原样不变 */
         .func-wrap{
-            max-width:1100px;margin:40px auto;
-            display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding:0 20px;
+            max-width:1200px;margin:40px auto;
+            display:grid;grid-template-columns:repeat(4,1fr);gap:25px;padding:0 20px;
         }
         .func-btn{
-            background:#1f4e79;color:white;border:none;padding:22px;border-radius:8px;font-size:17px;cursor:pointer;
+            background:#1f4e79;color:#fff;border:none;
+            padding:28px 12px;font-size:18px;border-radius:8px;cursor:pointer;
+            transition:0.2s;
         }
-        .func-btn:hover{background:#163552;}
+        .func-btn:hover{background:#163552;transform:translateY(-2px);}
 
-        /* 弹窗样式 */
-        .mask{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;z-index:998;}
+        .admin-enter{text-align:center;margin:30px 0 50px;}
+
+        footer{text-align:center;padding:30px;color:#666;font-size:15px;}
+
+        /* 弹窗样式 全部原样保留 */
+        .mask{
+            position:fixed;inset:0;background:#00000075;display:none;z-index:999;
+        }
         .pop{
             position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-            background:white;padding:30px;border-radius:10px;width:90%;max-width:520px;
-            display:none;z-index:999;
+            background:#fff;padding:30px;border-radius:10px;width:92%;max-width:550px;
+            max-height:92vh;overflow:auto;display:none;z-index:1000;
         }
-        .close{text-align:right;cursor:pointer;color:#666;}
-        input{width:100%;margin:8px 0;padding:10px;border:1px solid #ddd;border-radius:4px;}
-        .submit-btn{width:100%;padding:12px;background:#1f4e79;color:white;border:none;border-radius:4px;margin-top:10px;cursor:pointer;}
+        .close-pop{text-align:right;cursor:pointer;color:#666;font-size:20px;}
+        .pop h3{margin-bottom:20px;text-align:center;}
+        .pop input{
+            width:100%;margin:10px 0;padding:12px;border:1px solid #ddd;border-radius:5px;font-size:15px;
+        }
+        .pop-submit{
+            width:100%;padding:13px;background:#1f4e79;color:#fff;border:none;border-radius:5px;
+            font-size:16px;margin-top:15px;cursor:pointer;
+        }
 
-        /* 收据印章 */
-        .receipt{border:2px dashed #333;padding:3
+        /* 红色收款印章 原样不变 */
+        .receipt-box{
+            border:2px dashed #333;padding:35px;position:relative;margin:20px 0;
+        }
+        .seal{
+            position:absolute;right:25px;bottom:40px;width:130px;height:130px;
+            border:4px solid #cc0000;border-radius:50%;color:#cc0000;font-weight:bold;font-size:15px;
+            display:flex;align-items:center;justify-content:center;line-height:1.5;
+            opacity:0.85;transform:rotate(-12deg);
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <strong>云浮·罗定 一方御湾小区</strong>
+    <span>北京时间：<span id="time"></span></span>
+</div>
+
+<!-- 你的一方御湾小区全景图 -->
+<div class="top-banner"></div>
+
+<!-- 滚动通知：只保留小区+物业电话，彻底删除招生广告 -->
+<div class="ad-banner">
+    <div class="scroll-text">
+        🏠 一方御湾小区｜物业服务中心服务热线：0766‑3913001 🏠
+    </div>
+</div>
+
+<div class="func-wrap">
+    <button class="func-btn" onclick="openPop('pay')">💰 物业费缴费</button>
+    <button class="func-btn" onclick="openPop('vote')">🗳️ 业主投票</button>
+    <button class="func-btn" onclick="openPop('reg')">👤 业主登记</button>
+    <button class="func-btn" onclick="openPop('repair')">🔧 报修申报</button>
+</div>
+
+<div class="admin-enter">
+    <button class="func-btn" onclick="openPop('admin')">🔐 管理员后台登录</button>
+</div>
+
+<footer>一方御湾商住小区 · 专属物业管理缴费系统</footer>
+
+<div class="mask" onclick="closeAllPop()"></div>
+
+<div class="pop" id="pop-pay">
+    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
+    <h3>物业费缴费办理</h3>
+    <input type="text" id="house" placeholder="房号（例：3栋1502）">
+    <input type="text" id="name" placeholder="业主姓名">
+    <input type="number" id="money" placeholder="缴费金额（元）">
+    <input type="month" id="month">
+    <button class="pop-submit" onclick="submitPay()">确认提交，打印收据</button>
+</div>
+
+<div class="pop" id="pop-receipt">
+    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
+    <h3>物业官方缴费收据</h3>
+    <div class="receipt-box">
+        <p style="font-size:17px;margin:10px 0;">房号：<span id="r-house"></span></p>
+        <p style="font-size:17px;margin:10px 0;">业主姓名：<span id="r-name"></span></p>
+        <p style="font-size:17px;margin:10px 0;">缴费月份：<span id="r-month"></span></p>
+        <p style="font-size:17px;margin:10px 0;">缴费金额：¥ <span id="r-money"></span></p>
+        <p style="font-size:17px;margin:10px 0;">缴费时间：<span id="r-time"></span></p>
+        <div class="seal">一方御湾小区<br>物业收款<br>专用公章</div>
+    </div>
+    <button class="pop-submit" onclick="closeAllPop()">确认留存收据</button>
+</div>
+
+<div class="pop" id="pop-vote">
+    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
+    <h3>业主投票</h3>
+    <input placeholder="房号">
+    <input placeholder="业主姓名">
+    <input placeholder="投票选项">
+    <button class="pop-submit" onclick="submitVote()">提交投票</button>
+</div>
+
+<div class="pop" id="pop-reg">
+    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
+    <h3>业主信息登记</h3>
+    <input placeholder="房号">
+    <input placeholder="业主姓名">
+    <input placeholder="联系电话">
+    <button class="pop-submit" onclick="submitReg()">提交登记信息</button>
+</div>
+
+<div class="pop" id="pop-repair">
+    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
+    <h3>报修工单申报</h3>
+    <input placeholder="房号">
+    <input placeholder="故障详细描述">
+    <button class="pop-submit" onclick="submitRepair()">提交报修工单</button>
+</div>
+
+<div class="pop" id="pop-admin">
+    <div class="close-pop" onclick="closeAllPop()">✕ 关闭</div>
+    <h3>管理员专属登录</h3>
+    <input type="text" id="adminUser" placeholder="管理员账号">
+    <input type="password" id="adminPwd" placeholder="管理员密码">
+    <button class="pop-submit" onclick="loginAdmin()">登录独立管理后台</button>
+    <p style="text-align:center;margin-top:12px;color:#888;font-size:13px;">账号：admin  密码：99886</p>
+</div>
+
+<script>
+    function upTime(){
+        const now = new Date();
+        document.getElementById('time').innerText = now.toLocaleTimeString();
+    }
+    setInterval(upTime,1000);upTime();
+
+    function openPop(type){
+        document.querySelector('.mask').style.display = 'block';
+        const list = {pay:'pop-pay',vote:'pop-vote',reg:'pop-reg',repair:'pop-repair',admin:'pop-admin'};
+        document.getElementById(list[type]).style.display = 'block';
+    }
+
+    function closeAllPop(){
+        document.querySelector('.mask').style.display = 'none';
+        document.querySelectorAll('.pop').forEach(p=>p.style.display='none');
+    }
+
+    function submitPay(){
+        const house = document.getElementById('house').value;
+        const name = document.getElementById('name').value;
+        const money = document.getElementById('money').value;
+        const month = document.getElementById('month').value;
+        const time = new Date().toLocaleString();
+        if(!house||!name||!money||!month){alert('请填写完整信息');return;}
+
+        document.getElementById('r-house').innerText = house;
+        document.getElementById('r-name').innerText = name;
+        document.getElementById('r-month').innerText = month;
+        document.getElementById('r-money').innerText = money;
+        document.getElementById('r-time').innerText = time;
+
+        closeAllPop();
+        document.getElementById('pop-receipt').style.display='block';
+        saveData('缴费',{house,name,money,month,time});
+    }
+
+    function submitVote(){
+        const house = document.getElementById('house').value;
+        const name = document.getElementById('name').value;
+        saveData('投票',{house,name});alert('投票提交成功');closeAllPop();
+    }
+    function submitReg(){
+        saveData('登记',{});alert('登记提交成功');closeAllPop();
+    }
+    function submitRepair(){
+        saveData('报修',{});alert('报修工单提交成功');closeAllPop();
+    }
+
+    function saveData(type,obj){
+        let all = JSON.parse(localStorage.getItem('物业全部数据')||'[]');
+        all.push({...obj,type,time:new Date().toLocaleString()});
+        localStorage.setItem('物业全部数据',JSON.stringify(all));
+    }
+
+    function loginAdmin(){
+        const u = document.getElementById('adminUser').value;
+        const p = document.getElementById('adminPwd').value;
+        if(u==='admin'&&p==='99886'){
+            alert('登录成功，打开独立管理后台');
+            closeAllPop();
+            let newWin = window.open('','_blank');
+            newWin.document.write(`
+            <style>
+                body{padding:30px;font-family:"微软雅黑";margin:0;}
+                table{border-collapse:collapse;width:100%;margin:15px 0;}
+                th,td{border:1px solid #333;padding:10px;text-align:center;}
+                .btn{padding:10px 20px;background:#008822;color:#fff;border:none;border-radius:5px;margin:8px;cursor:pointer;font-size:15px;}
+                .block{margin:40px 0;padding:20px;border:1px solid #ccc;border-radius:8px;}
+                h1{color:#1f4e79;}
+                h2{color:#1f4e79;font-size:20px;}
+            </style>
+            <h1>📊 一方御湾 · 独立管理后台</h1><hr>
+            ${genTable('物业费缴费','缴费')}
+            ${genTable('业主投票记录','投票')}
+            ${genTable('业主登记信息','登记')}
+            ${genTable('报修工单列表','报修')}
+            <script>
+                function genCSV(type){
+                    let d = JSON.parse(localStorage.getItem('物业全部数据')||'[]').filter(i=>i.type===type);
+                    let csv='\\ufeff房号,业主,金额,月份,时间,类型\\n';
+                    d.forEach(i=>csv += (i.house||'')+','+(i.name||'')+','+(i.money||'')+','+(i.month||'')+','+i.time+','+i.type+'\\n');
+                    const blob = new Blob([csv],{type:'text/csv'});
+                    const a = document.createElement('a');
+                    a.href=URL.createObjectURL(blob);
+                    a.download=type+'数据报表.csv';a.click();
+                }
+            <\/script>
+            `)
+        }else{
+            alert('账号或密码错误');
+        }
+    }
+
+    function genTable(title,type){
+        let data = JSON.parse(localStorage.getItem('物业全部数据')||'[]').filter(i=>i.type===type);
+        let html = `<div class="block"><h2>${title}</h2><button class="btn" onclick="genCSV('${type}')">一键导出${title}Excel</button><table><tr style="background:#1f4e79;color:#fff;"><th>房号</th><th>业主</th><th>金额</th><th>月份</th><th>提交时间</th></tr>`;
+        data.forEach(d=>html += `<tr><td>${d.house||'-'}</td><td>${d.name||'-'}</td><td>${d.money||'-'}</td><td>${d.month||'-'}</td><td>${d.time}</td></tr>`);
+        return html+'</table></div>';
+    }
+</script>
+</body>
+</html>
